@@ -28,31 +28,26 @@ public class UserController {
 	
 	@GetMapping("allUsers")
 	public ResponseEntity<List<User>> getAllUsers() {
-		System.out.println("in all users con");
 		return userService.getAllUsers();
 	}
 	
 	@PostMapping
 	public ResponseEntity<ApiResponse> addUser(@RequestBody User user) {
-		System.out.println("in add");
 		return userService.addUser(user);
 	}
 	
 	@GetMapping("{id}")
-	public ResponseEntity getUserById(@PathVariable int id) {
-		System.out.println("in get by id");
+	public ResponseEntity<?> getUserById(@PathVariable int id) {
 		return userService.getUserById(id);
 	}
 	
 	@PutMapping("{id}")
-	public ResponseEntity editUser(@PathVariable int id, @RequestBody User user) {
-		System.out.println("in edit");
+	public ResponseEntity<ApiResponse> editUser(@PathVariable int id, @RequestBody User user) {
 		return userService.editUser(id, user);
 	}
 	
 	@DeleteMapping("{id}")
-	public ResponseEntity deleteUser(@PathVariable int id) {
-		System.out.println("in delete");
+	public ResponseEntity<ApiResponse> deleteUser(@PathVariable int id) {
 		return userService.deleteUser(id);
 	}
 }

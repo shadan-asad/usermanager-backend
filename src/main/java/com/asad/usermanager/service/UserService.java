@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.asad.usermanager.dao.UserDao;
 import com.asad.usermanager.dto.ApiResponse;
@@ -22,62 +23,62 @@ public class UserService {
 		try {
 			List<User> users = userDao.findAll();
 			users.sort((a,b) -> a.getId() - b.getId());
-			return new ResponseEntity(users, HttpStatus.OK);
+			return new ResponseEntity<>(users, HttpStatus.OK);
 		} catch (Exception e) {
 			e.printStackTrace();
-			return new ResponseEntity(new ArrayList<User>(), HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(new ArrayList<User>(), HttpStatus.BAD_REQUEST);
 		}
 	}
-
+	@Transactional
 	public ResponseEntity<ApiResponse> addUser(User user) {
 		ApiResponse res;
 		try {
-			userDao.save(user);
+			userDao.insertUser(user);
 			res = new ApiResponse("User added successfully!");
 			return new ResponseEntity<ApiResponse>(res, HttpStatus.OK);
 		} catch (Exception e) {
 			e.printStackTrace();
 			res = new ApiResponse("Unable to add user!");
-			return new ResponseEntity(res, HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
 		}
 	}
 
-	public ResponseEntity getUserById(int id) {
+	public ResponseEntity<?> getUserById(int id) {
 		try {
 			User user = userDao.findById(id).orElseThrow(() -> new RuntimeException());
-			return new ResponseEntity(user, HttpStatus.ACCEPTED);
+			return new ResponseEntity<>(user, HttpStatus.ACCEPTED);
 		} catch (Exception e) {
 			e.printStackTrace();
 			ApiResponse res = new ApiResponse("User not found!");
-			return new ResponseEntity(res, HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
 		}
 	}
 
-	public ResponseEntity deleteUser(int id) {
+	public ResponseEntity<ApiResponse> deleteUser(int id) {
 		ApiResponse res;
 		try {
 			userDao.deleteById(id);
 			res = new ApiResponse("User deleted successfully!");
-			return new ResponseEntity(res, HttpStatus.ACCEPTED);
+			return new ResponseEntity<>(res, HttpStatus.ACCEPTED);
 		} catch (Exception e) {
 			e.printStackTrace();
 			res = new ApiResponse("User not found!");
-			return new ResponseEntity(res, HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
 		}
 	}
 
-	public ResponseEntity editUser(int id, User user) {
+	public ResponseEntity<ApiResponse> editUser(int id, User user) {
 		ApiResponse res;
 		try {
-			User nuser = userDao.findById(id).orElseThrow(() -> new RuntimeException());
-			user.setId(nuser.getId());
+			User existingUser = userDao.findById(id).orElseThrow(() -> new RuntimeException());
+			user.setId(existingUser.getId());
 			userDao.save(user);
 			res = new ApiResponse("User updated successfully!");
-			return new ResponseEntity(res, HttpStatus.ACCEPTED);
+			return new ResponseEntity<>(res, HttpStatus.ACCEPTED);
 		} catch (Exception e) {
 			e.printStackTrace();
 			res = new ApiResponse("User not found!");
-			return new ResponseEntity(res, HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
 		}
 	}
 
