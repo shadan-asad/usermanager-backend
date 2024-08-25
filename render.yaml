@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: backend
+    env: docker
+    buildCommand: ./mvnw package -DskipTests
+    startCommand: java -jar target/*.jar
+    envVars:
+      - key: DB_URL
+        fromDatabase:
+          name: user-manager
+          property: connectionString
+      - key: DB_USERNAME
+        fromDatabase:
+          name: user-manager
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: user-manager
+          property: password
