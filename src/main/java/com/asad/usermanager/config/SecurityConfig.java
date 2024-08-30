@@ -32,9 +32,7 @@ public class SecurityConfig {
                 .antMatchers("/user/**").authenticated()
                 .anyRequest().authenticated()
             )
-            .oauth2Login(oauth2 -> oauth2
-                .defaultSuccessUrl("http://localhost:4200/dashboard", true)
-            );
+            .oauth2Login();
         
         return http.build();
     }

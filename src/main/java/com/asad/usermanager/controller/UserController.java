@@ -18,7 +18,7 @@ import com.asad.usermanager.dto.ApiResponse;
 import com.asad.usermanager.model.User;
 import com.asad.usermanager.service.UserService;
 
-@CrossOrigin(origins = "http://localhost:4200")
+// @CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping("user")
 public class UserController {
